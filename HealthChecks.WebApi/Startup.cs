@@ -35,7 +35,6 @@ namespace HealthChecks.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddHealthChecksUI().AddInMemoryStorage();
             services.AddHealthChecks()
             .AddDbContextCheck<DataContext>()
            .AddUrlGroup(new Uri("https://www.codewithmukesh.com"), name: "CodewithMukesh")
@@ -79,7 +78,6 @@ namespace HealthChecks.WebApi
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
                 }
             });
-            app.UseHealthChecksUI();
             app.UseRouting();
 
             app.UseAuthorization();
@@ -87,11 +85,6 @@ namespace HealthChecks.WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecksUI(setup =>
-                {
-                    setup.UIPath = "/health-ui"; // this is ui path in your browser
-                    setup.ApiPath = "/health-api"; // the UI ( spa app )  use this path to get information from the store ( this is NOT the healthz path, is internal ui api )
-                });
             });
         }
     }
